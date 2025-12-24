@@ -1,0 +1,37 @@
+services:
+  # 1. VPN
+  vpn-client:
+    image: linuxserver/wireguard:latest
+    container_name: vpn-client
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Mexico_City
+    volumes:
+      - ./config:/config # Aquí pondrás el archivo .conf que copiaste del servidor
+      - /lib/modules:/lib/modules
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+ 
+   # 3. HMI simulado
+  hmi-simulado:
+    container_name: hmi-simulado
+    image: dorowu/ubuntu-desktop-lxde-vnc
+    restart: unless-stopped
+    network_mode: service:vpn-client
+
+   # 2. Websockify
+  websockify:
+    build: ./websockify
+    container_name: websockify
+    depends_on:
+      - vpn-client
+      - hmi-simulado
+    network_mode: service:vpn-client
+    volumes:
+      - ./websockify/token.txt:/app/tokens/token.txt:ro
+    restart: unless-stopped
