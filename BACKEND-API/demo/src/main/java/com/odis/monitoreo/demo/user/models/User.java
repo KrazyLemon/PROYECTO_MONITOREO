@@ -1,8 +1,10 @@
 package com.odis.monitoreo.demo.user.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,16 +13,22 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
+@Table(name = "usuario", uniqueConstraints = {@UniqueConstraint(columnNames = {"correo"})})
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
+    @Column(name = "nombre")
     private String firstName;
+    @Column(name = "apellido")
     private String lastName;
+    @Column(name = "correo")
     private String username;
+    @Column(name = "contrasena")
     private String password;
 
     @Enumerated(EnumType.STRING)
