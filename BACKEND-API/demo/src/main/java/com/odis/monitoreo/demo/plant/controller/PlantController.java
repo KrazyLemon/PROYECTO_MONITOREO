@@ -20,10 +20,10 @@ public class PlantController {
         return ResponseEntity.ok("Hola desde un endpoint privado");
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<Plant>> getAllPlants() {
-//        return ResponseEntity.ok(plantService.getAllPlants());
-//    }
+    @GetMapping
+    public ResponseEntity<List<Plant>> getAllPlants() {
+        return ResponseEntity.ok(plantService.getAllPlants());
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Plant> getPlantById(@PathVariable Integer id) {
