@@ -1,10 +1,15 @@
 package com.odis.monitoreo.demo.plant.model;
 
+import com.odis.monitoreo.demo.user.models.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -16,13 +21,20 @@ public class Plant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column(name = "nombre")
     private String name;
+
     @Column(name = "ubicacion")
     private String ubication;
+
     @Column(name = "vpn_ip")
     private String vpnIp;
+
     @Column(name = "ip_vnc")
     private String ipVnc;
+
+    @ManyToMany(mappedBy = "plants")
+    private Set<User> users = new HashSet<>();
 
 }

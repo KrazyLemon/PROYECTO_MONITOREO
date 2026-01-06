@@ -28,6 +28,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=password123
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW-SQL=true
+      - SPRING_JPA_FORMAT_SQL=true
     depends_on:
       db:
         condition: service_healthy
