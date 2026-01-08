@@ -1,7 +1,6 @@
 package com.odis.monitoreo.demo.user.models;
 
 public enum Role {
-    ADMIN,
-    USER,
-    VIEWER
+    ROLE_ADMIN,
+    ROLE_USER,
 }

@@ -1,11 +1,9 @@
 package com.odis.monitoreo.demo.user.models;
 
-import com.odis.monitoreo.demo.plant.model.Plant;
+import com.odis.monitoreo.demo.company.models.Company;
+import com.odis.monitoreo.demo.plant.model.Conection;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
@@ -19,8 +17,9 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "usuarios", uniqueConstraints = {@UniqueConstraint(columnNames = {"correo"})})
-@Data
+@Table(name = "usuarios", uniqueConstraints = {@UniqueConstraint(columnNames = {"correo","empresa_id"})})
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -45,15 +44,18 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Audited
-    @ManyToMany
     @NotAudited
-    @JoinTable(
-            name = "conexiones",
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "planta_id")
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.PERSIST,
+            fetch = FetchType.LAZY
     )
-    private Set<Plant> plants = new HashSet<>();
+    private Set<Conection> conections = new HashSet<>();
+
+    @NotAudited
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empresa_id", nullable = false)
+    private Company company;
 
     @Override
     public boolean isAccountNonExpired() {

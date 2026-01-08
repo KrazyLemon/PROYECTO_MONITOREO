@@ -1,5 +1,6 @@
 package com.odis.monitoreo.demo.plant.model;
 
+import com.odis.monitoreo.demo.company.models.Company;
 import com.odis.monitoreo.demo.user.models.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,7 +36,11 @@ public class Plant {
     @Column(name = "ip_vnc")
     private String ipVnc;
 
-    @ManyToMany(mappedBy = "plants")
-    private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "plant", cascade = CascadeType.ALL)
+    private Set<Conection> conections = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empresa_id", nullable = false)
+    private Company company;
 
 }

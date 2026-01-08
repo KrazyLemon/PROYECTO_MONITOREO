@@ -2,7 +2,9 @@ package com.odis.monitoreo.demo.plant.service;
 
 import com.odis.monitoreo.demo.plant.model.Plant;
 import com.odis.monitoreo.demo.plant.repository.PlantRepository;
+import com.odis.monitoreo.demo.user.models.User;
 import jakarta.transaction.Transactional;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,4 +54,7 @@ public class PlantService {
                 }).orElse(false);
     }
 
+//    public ResponseEntity<Plant> conect(Integer id, User user) {
+//        ret
+//    }
 }
