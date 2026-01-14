@@ -16,7 +16,7 @@ import org.hibernate.envers.Audited;
 @Builder
 public class Company {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name="nombre", nullable = false)

@@ -1,5 +1,6 @@
 package com.odis.monitoreo.demo.plant.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.odis.monitoreo.demo.company.models.Company;
 import com.odis.monitoreo.demo.user.models.User;
 import jakarta.persistence.*;
@@ -26,6 +27,10 @@ public class Plant {
 
     @Column(name = "nombre")
     private String name;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "API_KEY")
+    private String key;
 
     @Column(name = "ubicacion")
     private String ubication;

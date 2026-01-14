@@ -11,14 +11,14 @@ import org.hibernate.envers.Audited;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "con_usuario_planta")
+@Table(name = "conexiones")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Conection {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
@@ -28,6 +28,9 @@ public class Conection {
     @ManyToOne
     @JoinColumn(name = "planta_id")
     private Plant plant;
+
+    @Column(name = "token")
+    private String token;
 
     @Column(name = "permiso")
     @Enumerated(EnumType.STRING)

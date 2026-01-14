@@ -42,4 +42,6 @@ public class AplicationConfig {
         return username -> userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+
 }

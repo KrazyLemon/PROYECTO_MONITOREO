@@ -1,12 +1,12 @@
 package com.odis.monitoreo.demo.user.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.odis.monitoreo.demo.company.models.Company;
 import com.odis.monitoreo.demo.plant.model.Conection;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
-import org.hibernate.envers.RelationTargetAuditMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +38,7 @@ public class User implements UserDetails {
     @Column(name = "correo")
     private String email;
 
+    @JsonProperty(access= JsonProperty.Access.WRITE_ONLY)
     @Column(name = "contrasena")
     private String password;
 

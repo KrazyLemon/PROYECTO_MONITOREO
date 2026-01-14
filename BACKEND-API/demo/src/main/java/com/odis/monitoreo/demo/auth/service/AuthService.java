@@ -3,6 +3,8 @@ package com.odis.monitoreo.demo.auth.service;
 import com.odis.monitoreo.demo.auth.models.AuthResponse;
 import com.odis.monitoreo.demo.auth.models.LoginRequest;
 import com.odis.monitoreo.demo.auth.models.RegisterRequest;
+import com.odis.monitoreo.demo.company.repository.CompanyRepository;
+import com.odis.monitoreo.demo.company.service.CompanyService;
 import com.odis.monitoreo.demo.jwt.JwtService;
 import com.odis.monitoreo.demo.user.models.Role;
 import com.odis.monitoreo.demo.user.models.User;
@@ -21,6 +23,8 @@ public class AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final CompanyRepository companyRepository;
+
 
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
@@ -36,6 +40,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
+                .company(companyRepository.findByName(request.getEmpresa()))
                 .role(Role.ROLE_USER)
                 .build();
 
@@ -47,5 +52,9 @@ public class AuthService {
                 .token(jwtService.getToken(user))
                 .build();
     }
+
+//    public AuthResponse plantLogin(PlantRequest request){
+//
+//    }
 
 }

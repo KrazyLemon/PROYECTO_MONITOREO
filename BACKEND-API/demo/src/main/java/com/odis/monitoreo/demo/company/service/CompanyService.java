@@ -1,10 +1,12 @@
 package com.odis.monitoreo.demo.company.service;
 
 import com.odis.monitoreo.demo.company.models.Company;
+import com.odis.monitoreo.demo.company.models.CompanyResponse;
 import com.odis.monitoreo.demo.company.repository.CompanyRepository;
 import com.odis.monitoreo.demo.config.SecurityUtils;
 import com.odis.monitoreo.demo.user.models.Role;
 import com.odis.monitoreo.demo.user.models.User;
+import com.odis.monitoreo.demo.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,9 +25,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CompanyService {
+
     private final CompanyRepository companyRepository;
     private final SecurityUtils securityUtils;
-
+    private final UserRepository userRepository;
 
     /*   *****************************************************************
      ************** API ENDPOINT SOLO ACCESIBLES PARA  ********************
@@ -37,7 +40,6 @@ public class CompanyService {
      *
      * ************************ ******************************************/
 
-
     /**
      * Obtiene una empresa por su identificador.
      *
@@ -46,10 +48,14 @@ public class CompanyService {
      * @throws AccessDeniedException Si el usuario actual no tiene permisos (no es ADMIN de SuperEmpresa).
      */
     @Transactional
-    public Optional<Company> getCompanyById(Integer id) throws AccessDeniedException{
-        User user = securityUtils.getCurrentUser();
+    public List<CompanyResponse> getCompanyById(Integer id) throws AccessDeniedException{
+        User principal = securityUtils.getCurrentUser();
+        User user = userRepository.findById(principal.getId()).orElseThrow(() -> new AccessDeniedException("Usuario no encontrado"));
+
         if(user.getCompany().isSuperEmpresa() && user.getRole() == Role.ROLE_ADMIN){
-            return companyRepository.findById(id);
+            return companyRepository.findById(id).stream()
+                    .map(c -> new CompanyResponse(c.getId(), c.getName(), c.isSuperEmpresa()) )
+                    .toList();
         }
         throw new AccessDeniedException("No tienes permiso de acceder a esos datos");
     }
@@ -61,10 +67,14 @@ public class CompanyService {
      * @throws AccessDeniedException Si el usuario actual no tiene permisos (no es ADMIN de SuperEmpresa).
      */
     @Transactional
-    public List<Company> getAllCompanies() throws AccessDeniedException {
-        User user = securityUtils.getCurrentUser();
+    public List<CompanyResponse> getAllCompanies() throws AccessDeniedException {
+        User principal = securityUtils.getCurrentUser();
+        User user = userRepository.findById(principal.getId()).orElseThrow(() -> new AccessDeniedException("Usuario no encontrado"));
+
         if(user.getCompany().isSuperEmpresa() && user.getRole() == Role.ROLE_ADMIN){
-            return companyRepository.findAll();
+            return companyRepository.findAll().stream()
+                    .map(c -> new CompanyResponse(c.getId(), c.getName(), c.isSuperEmpresa()) )
+                    .toList();
         }
         throw new AccessDeniedException("No tienes permiso de acceder a esos datos");
     }
@@ -78,7 +88,8 @@ public class CompanyService {
      */
     @Transactional
     public Company addCompany(Company company)throws AccessDeniedException {
-        User user = securityUtils.getCurrentUser();
+        User principal = securityUtils.getCurrentUser();
+        User user = userRepository.findById(principal.getId()).orElseThrow(() -> new AccessDeniedException("Usuario no encontrado"));
 
         if(user.getCompany().isSuperEmpresa() && user.getRole() == Role.ROLE_ADMIN){
             return companyRepository.save(company);
@@ -96,7 +107,9 @@ public class CompanyService {
      */
     @Transactional
     public Optional<Company> updateCompany(Company newcompany,Integer id)throws AccessDeniedException {
-        User user = securityUtils.getCurrentUser();
+        User principal = securityUtils.getCurrentUser();
+        User user = userRepository.findById(principal.getId()).orElseThrow(() -> new AccessDeniedException("Usuario no encontrado"));
+
         if(user.getCompany().isSuperEmpresa() && user.getRole() == Role.ROLE_ADMIN){
             return companyRepository.findById(id)
                     .map(company -> {
@@ -116,7 +129,9 @@ public class CompanyService {
      */
     @Transactional
     public boolean deleteCompany( Integer id) throws AccessDeniedException{
-        User user = securityUtils.getCurrentUser();
+        User principal = securityUtils.getCurrentUser();
+        User user = userRepository.findById(principal.getId()).orElseThrow(() -> new AccessDeniedException("Usuario no encontrado"));
+
         if(user.getCompany().isSuperEmpresa() && user.getRole() == Role.ROLE_ADMIN){
             companyRepository.deleteById(id);
             return true;

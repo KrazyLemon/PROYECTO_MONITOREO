@@ -1,24 +1,31 @@
 package com.odis.monitoreo.demo.plant.service;
 
+import com.odis.monitoreo.demo.config.KeyGeneratorUtils;
+import com.odis.monitoreo.demo.config.SecurityUtils;
 import com.odis.monitoreo.demo.plant.model.Plant;
+import com.odis.monitoreo.demo.plant.model.PlantRequest;
 import com.odis.monitoreo.demo.plant.repository.PlantRepository;
 import com.odis.monitoreo.demo.user.models.User;
+import com.odis.monitoreo.demo.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PlantService {
 
-// Inyeccion de dependencias
+    // Inyeccion de dependencias
     private final PlantRepository plantRepository;
-
-    public PlantService(PlantRepository plantRepository) {
-        this.plantRepository = plantRepository;
-    }
+    private final PasswordEncoder passwordEncoder;
+    private final SecurityUtils securityUtils;
+    private final UserRepository userRepository;
 
     // Metodos
     public List<Plant> getAllPlants() {
@@ -29,8 +36,22 @@ public class PlantService {
         return plantRepository.findById(id);
     }
 
-    public Plant createPlant(Plant plant) {
-        return plantRepository.save(plant);
+    public String createPlant(PlantRequest plant) throws AccessDeniedException {
+        String rawKey = KeyGeneratorUtils.generateKey();
+        String encodedKey = passwordEncoder.encode(rawKey);
+
+        User principal = securityUtils.getCurrentUser();
+        User user = userRepository.findById(principal.getId()).orElseThrow(() -> new AccessDeniedException("Usuario no encontrado"));
+
+        Plant newPlant = new Plant();
+        newPlant.setName(plant.getName());
+        newPlant.setKey(encodedKey);
+        newPlant.setCompany(user.getCompany());
+        newPlant.setUbication(plant.getUbication());
+        newPlant.setVpnIp(plant.getVpnIp());
+        newPlant.setIpVnc(plant.getIpVnc());
+        plantRepository.save(newPlant);
+        return rawKey;
     }
 
     @Transactional
@@ -53,8 +74,4 @@ public class PlantService {
                     return true;
                 }).orElse(false);
     }
-
-//    public ResponseEntity<Plant> conect(Integer id, User user) {
-//        ret
-//    }
 }
