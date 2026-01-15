@@ -1,4 +1,4 @@
-package com.odis.monitoreo.demo.plant.model;
+package com.odis.monitoreo.demo.plant.models;
 
 public enum AccessLevel {
     ADMIN_ACCESS,

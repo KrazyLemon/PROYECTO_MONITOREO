@@ -1,7 +1,7 @@
 package com.odis.monitoreo.demo.plant.controller;
 
-import com.odis.monitoreo.demo.plant.model.Conection;
-import com.odis.monitoreo.demo.plant.model.ConnectionRequest;
+import com.odis.monitoreo.demo.plant.models.Conection;
+import com.odis.monitoreo.demo.plant.models.ConnectionRequest;
 import com.odis.monitoreo.demo.plant.service.ConnectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

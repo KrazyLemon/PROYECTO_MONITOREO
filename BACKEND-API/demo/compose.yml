@@ -19,20 +19,26 @@ services:
 
   # TU API (SPRING BOOT)
   api:
-    build: . # Esto buscará un 'Dockerfile' en la raíz de tu proyecto Java
+    build:
+      context: .
+      target: development
     container_name: monitor-api-local
     ports:
       - "8080:8080"
+      - "5005:5005" # Puerto para Debugear
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/monitor_db
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=password123
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_JPA_SHOW-SQL=true
-      - SPRING_JPA_FORMAT_SQL=true
+    volumes:
+      - .:/app # Directorio de trabajo
+      - ~/.m2:/root/.m2 # Cache de librerías
     depends_on:
       db:
         condition: service_healthy
+
+    command: mvn spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+
 
 volumes:
   postgres_data_local:

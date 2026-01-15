@@ -1,4 +1,4 @@
-package com.odis.monitoreo.demo.config;
+package com.odis.monitoreo.demo.config.aplication;
 
 import com.odis.monitoreo.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,10 +1,10 @@
 package com.odis.monitoreo.demo.plant.service;
 
-import com.odis.monitoreo.demo.config.KeyGeneratorUtils;
-import com.odis.monitoreo.demo.config.SecurityUtils;
-import com.odis.monitoreo.demo.plant.model.Conection;
-import com.odis.monitoreo.demo.plant.model.ConnectionRequest;
-import com.odis.monitoreo.demo.plant.model.Plant;
+import com.odis.monitoreo.demo.config.aplication.KeyGeneratorUtils;
+import com.odis.monitoreo.demo.config.Security.SecurityUtils;
+import com.odis.monitoreo.demo.plant.models.Conection;
+import com.odis.monitoreo.demo.plant.models.ConnectionRequest;
+import com.odis.monitoreo.demo.plant.models.Plant;
 import com.odis.monitoreo.demo.plant.repository.ConnectionRepository;
 import com.odis.monitoreo.demo.plant.repository.PlantRepository;
 import com.odis.monitoreo.demo.user.models.User;
