@@ -3,15 +3,15 @@ package com.odis.monitoreo.demo.company.service;
 import com.odis.monitoreo.demo.company.models.Company;
 import com.odis.monitoreo.demo.company.models.CompanyResponse;
 import com.odis.monitoreo.demo.company.repository.CompanyRepository;
-import com.odis.monitoreo.demo.config.SecurityUtils;
+import com.odis.monitoreo.demo.config.Security.SecurityUtils;
 import com.odis.monitoreo.demo.user.models.Role;
 import com.odis.monitoreo.demo.user.models.User;
 import com.odis.monitoreo.demo.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,16 +48,16 @@ public class CompanyService {
      * @throws AccessDeniedException Si el usuario actual no tiene permisos (no es ADMIN de SuperEmpresa).
      */
     @Transactional
-    public List<CompanyResponse> getCompanyById(Integer id) throws AccessDeniedException{
-        User principal = securityUtils.getCurrentUser();
-        User user = userRepository.findById(principal.getId()).orElseThrow(() -> new AccessDeniedException("Usuario no encontrado"));
-
-        if(user.getCompany().isSuperEmpresa() && user.getRole() == Role.ROLE_ADMIN){
-            return companyRepository.findById(id).stream()
-                    .map(c -> new CompanyResponse(c.getId(), c.getName(), c.isSuperEmpresa()) )
-                    .toList();
-        }
-        throw new AccessDeniedException("No tienes permiso de acceder a esos datos");
+    public List<CompanyResponse> getCompanyById(Integer id) throws AccessDeniedException {
+        return companyRepository
+                .findById(id)
+                .stream()
+                .map(c -> new CompanyResponse(
+                        c.getId(),
+                        c.getName(),
+                        c.isSuperEmpresa()
+                ))
+                .toList();
     }
 
     /**
@@ -68,15 +68,15 @@ public class CompanyService {
      */
     @Transactional
     public List<CompanyResponse> getAllCompanies() throws AccessDeniedException {
-        User principal = securityUtils.getCurrentUser();
-        User user = userRepository.findById(principal.getId()).orElseThrow(() -> new AccessDeniedException("Usuario no encontrado"));
-
-        if(user.getCompany().isSuperEmpresa() && user.getRole() == Role.ROLE_ADMIN){
-            return companyRepository.findAll().stream()
-                    .map(c -> new CompanyResponse(c.getId(), c.getName(), c.isSuperEmpresa()) )
-                    .toList();
-        }
-        throw new AccessDeniedException("No tienes permiso de acceder a esos datos");
+        return companyRepository
+                .findAll()
+                .stream()
+                .map(c -> new CompanyResponse(
+                        c.getId(),
+                        c.getName(),
+                        c.isSuperEmpresa()
+                ))
+                .toList();
     }
 
     /**
@@ -88,13 +88,7 @@ public class CompanyService {
      */
     @Transactional
     public Company addCompany(Company company)throws AccessDeniedException {
-        User principal = securityUtils.getCurrentUser();
-        User user = userRepository.findById(principal.getId()).orElseThrow(() -> new AccessDeniedException("Usuario no encontrado"));
-
-        if(user.getCompany().isSuperEmpresa() && user.getRole() == Role.ROLE_ADMIN){
-            return companyRepository.save(company);
-        }
-        throw new AccessDeniedException("No tienes permiso para realizar esta accion");
+        return companyRepository.save(company);
     }
 
     /**
@@ -107,17 +101,11 @@ public class CompanyService {
      */
     @Transactional
     public Optional<Company> updateCompany(Company newcompany,Integer id)throws AccessDeniedException {
-        User principal = securityUtils.getCurrentUser();
-        User user = userRepository.findById(principal.getId()).orElseThrow(() -> new AccessDeniedException("Usuario no encontrado"));
-
-        if(user.getCompany().isSuperEmpresa() && user.getRole() == Role.ROLE_ADMIN){
-            return companyRepository.findById(id)
-                    .map(company -> {
-                        company.setName(newcompany.getName());
-                        return companyRepository.save(company);
-                    });
-        }
-        throw new AccessDeniedException("No tienes permiso para realizar esta accion");
+        return companyRepository.findById(id)
+                .map(company -> {
+                    company.setName(newcompany.getName());
+                    return companyRepository.save(company);
+                });
     }
 
     /**
@@ -129,15 +117,8 @@ public class CompanyService {
      */
     @Transactional
     public boolean deleteCompany( Integer id) throws AccessDeniedException{
-        User principal = securityUtils.getCurrentUser();
-        User user = userRepository.findById(principal.getId()).orElseThrow(() -> new AccessDeniedException("Usuario no encontrado"));
-
-        if(user.getCompany().isSuperEmpresa() && user.getRole() == Role.ROLE_ADMIN){
-            companyRepository.deleteById(id);
-            return true;
-        }
-        throw new AccessDeniedException("No tienes permiso para realizar esta accion");
+        companyRepository.deleteById(id);
+        return true;
     }
-
 
 }

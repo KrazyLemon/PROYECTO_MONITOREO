@@ -1,19 +1,18 @@
 package com.odis.monitoreo.demo.plant.service;
 
-import com.odis.monitoreo.demo.config.KeyGeneratorUtils;
-import com.odis.monitoreo.demo.config.SecurityUtils;
-import com.odis.monitoreo.demo.plant.model.Plant;
-import com.odis.monitoreo.demo.plant.model.PlantRequest;
+import com.odis.monitoreo.demo.config.aplication.KeyGeneratorUtils;
+import com.odis.monitoreo.demo.config.Security.SecurityUtils;
+import com.odis.monitoreo.demo.plant.models.Plant;
+import com.odis.monitoreo.demo.plant.models.PlantRequest;
 import com.odis.monitoreo.demo.plant.repository.PlantRepository;
 import com.odis.monitoreo.demo.user.models.User;
 import com.odis.monitoreo.demo.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.access.AccessDeniedException;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 

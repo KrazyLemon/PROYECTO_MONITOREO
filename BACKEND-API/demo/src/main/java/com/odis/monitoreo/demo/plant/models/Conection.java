@@ -1,4 +1,4 @@
-package com.odis.monitoreo.demo.plant.model;
+package com.odis.monitoreo.demo.plant.models;
 
 import com.odis.monitoreo.demo.user.models.User;
 import jakarta.persistence.*;
@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.envers.Audited;
 
 import java.time.LocalDateTime;
 

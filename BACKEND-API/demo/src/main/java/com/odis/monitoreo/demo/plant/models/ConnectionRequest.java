@@ -1,4 +1,4 @@
-package com.odis.monitoreo.demo.plant.model;
+package com.odis.monitoreo.demo.plant.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

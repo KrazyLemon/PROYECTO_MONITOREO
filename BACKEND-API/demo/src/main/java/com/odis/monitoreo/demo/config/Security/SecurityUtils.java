@@ -1,4 +1,4 @@
-package com.odis.monitoreo.demo.config;
+package com.odis.monitoreo.demo.config.Security;
 
 import com.odis.monitoreo.demo.user.models.User;
 

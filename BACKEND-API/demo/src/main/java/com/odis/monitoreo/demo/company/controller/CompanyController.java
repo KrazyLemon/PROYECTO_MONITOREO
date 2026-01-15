@@ -8,8 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import java.nio.file.AccessDeniedException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,6 @@ public class CompanyController {
      * Obtiene una lista de todas las empresas.
      *
      * @return Una lista de objetos {@link Company}.
-     * @throws AccessDeniedException Si el usuario no tiene los permisos necesarios.
      */
     @Operation(
             summary = "Listar empresas",
@@ -42,8 +42,9 @@ public class CompanyController {
                     @ApiResponse(responseCode = "403", description = "Acceso denegado")
             }
     )
+    @PreAuthorize("hasRole('ROLE_ADMIN') and @securityChecker.isSuperUser(principal.username)")
     @GetMapping
-    public List<CompanyResponse> getAllCompanies() throws AccessDeniedException{
+    public List<CompanyResponse> getAllCompanies() {
         return  companyService.getAllCompanies();
     }
 
@@ -52,7 +53,6 @@ public class CompanyController {
      *
      * @param id El ID de la empresa a obtener.
      * @return Un {@link Optional} que contiene la empresa si se encuentra.
-     * @throws AccessDeniedException Si el usuario no tiene los permisos necesarios.
      */
     @Operation(
             summary = "Obtener empresa por ID",
@@ -64,7 +64,7 @@ public class CompanyController {
             }
     )
     @GetMapping("/{id}")
-    public List<CompanyResponse>getCompanyById(@PathVariable Integer id)throws AccessDeniedException{
+    public List<CompanyResponse>getCompanyById(@PathVariable Integer id) {
         return companyService.getCompanyById(id);
     }
 
@@ -73,7 +73,6 @@ public class CompanyController {
      *
      * @param company El objeto {@link Company} a agregar.
      * @return La empresa que fue agregada.
-     * @throws AccessDeniedException Si el usuario no tiene los permisos necesarios.
      */
     @Operation(
             summary = "Crear empresa",
@@ -83,8 +82,9 @@ public class CompanyController {
                     @ApiResponse(responseCode = "403", description = "Acceso denegado")
             }
     )
+    @PreAuthorize("hasRole('ROLE_ADMIN') and @securityChecker.isSuperUser(principal.username)")
     @PostMapping
-    public Company addCompany(@RequestBody Company company)throws AccessDeniedException{
+    public Company addCompany(@RequestBody Company company){
         return companyService.addCompany(company);
     }
 
@@ -94,7 +94,6 @@ public class CompanyController {
      * @param company El objeto {@link Company} con los datos actualizados.
      * @param id El ID de la empresa a actualizar.
      * @return Un {@link Optional} que contiene la empresa actualizada si se encuentra.
-     * @throws AccessDeniedException Si el usuario no tiene los permisos necesarios.
      */
     @Operation(
             summary = "Actualizar empresa",
@@ -105,8 +104,9 @@ public class CompanyController {
                     @ApiResponse(responseCode = "403", description = "Acceso denegado")
             }
     )
+    @PreAuthorize("hasRole('ROLE_ADMIN') and @securityChecker.isSuperUser(principal.username)")
     @PutMapping("/{id}")
-    public Optional<Company> updateCompany(@RequestBody Company company, @PathVariable Integer id)throws AccessDeniedException{
+    public Optional<Company> updateCompany(@RequestBody Company company, @PathVariable Integer id){
         return companyService.updateCompany(company, id);
     }
 
@@ -115,7 +115,6 @@ public class CompanyController {
      *
      * @param id El ID de la empresa a eliminar.
      * @return {@code true} si la empresa fue eliminada.
-     * @throws AccessDeniedException Si el usuario no tiene los permisos necesarios.
      */
     @Operation(
             summary = "Eliminar empresa",
@@ -125,8 +124,9 @@ public class CompanyController {
                     @ApiResponse(responseCode = "403", description = "Acceso denegado")
             }
     )
+    @PreAuthorize("hasRole('ROLE_ADMIN') and @securityChecker.isSuperUser(principal.username)")
     @DeleteMapping("/{id}")
-    public boolean deleteCompany(@PathVariable Integer id)throws AccessDeniedException{
+    public boolean deleteCompany(@PathVariable Integer id){
         return companyService.deleteCompany(id);
     }
 

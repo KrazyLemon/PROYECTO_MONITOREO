@@ -1,4 +1,4 @@
-package com.odis.monitoreo.demo.config;
+package com.odis.monitoreo.demo.config.aplication;
 
 import java.security.SecureRandom;
 import java.util.Base64;

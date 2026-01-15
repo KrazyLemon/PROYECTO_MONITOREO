@@ -1,19 +1,18 @@
 package com.odis.monitoreo.demo.plant.controller;
 
-import com.odis.monitoreo.demo.plant.model.Plant;
-import com.odis.monitoreo.demo.plant.model.PlantRequest;
+import com.odis.monitoreo.demo.plant.models.Plant;
+import com.odis.monitoreo.demo.plant.models.PlantRequest;
 import com.odis.monitoreo.demo.plant.service.PlantService;
-import com.odis.monitoreo.demo.user.models.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
+
 import java.util.List;
 
 /**
@@ -68,13 +67,6 @@ public class PlantController {
         return ResponseEntity.ok(plantService.getAllPlants());
     }
 
-//    @GetMapping("/connect/{id}")
-//    public ResponseEntity<Plant> connect(@PathVariable Integer id){
-//        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        return plantService.conect(id,user);
-//        }
-//    }
-
     /**
      * Obtiene una planta específica por su ID.
      * El acceso está restringido a usuarios que tienen la planta asignada.
@@ -114,7 +106,8 @@ public class PlantController {
             }
     )
     @PostMapping
-    public String createPlant(@RequestBody PlantRequest plant) throws AccessDeniedException {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String createPlant(@RequestBody PlantRequest plant)  {
         return plantService.createPlant(plant);
     }
 

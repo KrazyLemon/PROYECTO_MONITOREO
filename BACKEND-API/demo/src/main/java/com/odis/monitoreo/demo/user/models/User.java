@@ -2,7 +2,7 @@ package com.odis.monitoreo.demo.user.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.odis.monitoreo.demo.company.models.Company;
-import com.odis.monitoreo.demo.plant.model.Conection;
+import com.odis.monitoreo.demo.plant.models.Conection;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.envers.Audited;
@@ -54,7 +54,7 @@ public class User implements UserDetails {
     private Set<Conection> conections = new HashSet<>();
 
     @NotAudited
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "empresa_id", nullable = false)
     private Company company;
 
