@@ -30,7 +30,6 @@ public class ConnectionController {
     @PutMapping("/update")
     public String updateConnection(@RequestParam String token, @RequestBody ConnectionRequest connectionRequest){
         return connectionService.updateConnection(token, connectionRequest);
-
     }
 
 }

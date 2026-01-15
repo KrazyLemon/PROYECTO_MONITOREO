@@ -31,38 +31,42 @@ public class PlantService {
         return plantRepository.findAll();
     }
 
-    public Optional<Plant> getPlantById(Integer id) {
-        return plantRepository.findById(id);
+    public Plant getPlantById(Integer id) {
+        return plantRepository.findById(id).orElseThrow();
     }
 
-    public String createPlant(PlantRequest plant) throws AccessDeniedException {
+    public String createPlant(PlantRequest plant) {
         String rawKey = KeyGeneratorUtils.generateKey();
         String encodedKey = passwordEncoder.encode(rawKey);
 
         User principal = securityUtils.getCurrentUser();
-        User user = userRepository.findById(principal.getId()).orElseThrow(() -> new AccessDeniedException("Usuario no encontrado"));
+        User user = userRepository.findById(principal.getId()).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         Plant newPlant = new Plant();
+
         newPlant.setName(plant.getName());
         newPlant.setKey(encodedKey);
         newPlant.setCompany(user.getCompany());
         newPlant.setUbication(plant.getUbication());
         newPlant.setVpnIp(plant.getVpnIp());
         newPlant.setIpVnc(plant.getIpVnc());
+
         plantRepository.save(newPlant);
         return rawKey;
     }
 
     @Transactional
-    public Optional<Plant> updatePlant(Integer id, Plant plantDetails) {
-        return plantRepository.findById(id)
-                .map(plant -> {
-                    plant.setName(plantDetails.getName());
-                    plant.setUbication(plantDetails.getUbication());
-                    plant.setVpnIp(plantDetails.getVpnIp());
-                    plant.setIpVnc(plantDetails.getIpVnc());
-                    return plantRepository.save(plant);
-                });
+    public Plant updatePlant(Integer id, PlantRequest plantDetails) {
+        plantRepository.findById(id).orElseThrow(() -> new RuntimeException("Planta no Encontrada"));
+
+        Plant plant = new Plant();
+
+        plant.setName(plantDetails.getName());
+        plant.setUbication(plantDetails.getUbication());
+        plant.setVpnIp(plantDetails.getVpnIp());
+        plant.setIpVnc(plantDetails.getIpVnc());
+
+        return plantRepository.save(plant);
     }
 
     @Transactional

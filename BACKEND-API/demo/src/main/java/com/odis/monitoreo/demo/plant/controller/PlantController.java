@@ -34,25 +34,25 @@ public class PlantController {
     // Inyeccion de dependencias
     private final PlantService plantService;
 
-    /**
-     * Endpoint de bienvenida para verificar el acceso.
-     * @return Un mensaje de bienvenida.
-     */
-    @Operation(
-            summary = "Bienvenida",
-            description = "Endpoint de prueba para verificar acceso autenticado.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Acceso correcto")
-            }
-    )
-    @GetMapping(value = "welcome")
-    public ResponseEntity<String> publico(){
-        return ResponseEntity.ok("Hola desde un endpoint privado");
-    }
+//    /**
+//     * Endpoint de bienvenida para verificar el acceso.
+//     * @return Un mensaje de bienvenida.
+//     */
+//    @Operation(
+//            summary = "Bienvenida",
+//            description = "Endpoint de prueba para verificar acceso autenticado.",
+//            responses = {
+//                    @ApiResponse(responseCode = "200", description = "Acceso correcto")
+//            }
+//    )
+//    @GetMapping(value = "welcome")
+//    public ResponseEntity<String> welcome(){
+//        return ResponseEntity.ok("Hola desde un endpoint privado");
+//    }
 
     /**
      * Obtiene una lista de todas las plantas a las que el usuario tiene acceso.
-     *
+     * @PreAuthorize verifica que el usuario actual pertenzca a empresa ODIS para ver todas las plantas.
      * @return Un {@link ResponseEntity} con una lista de objetos {@link Plant}.
      */
     @Operation(
@@ -63,8 +63,9 @@ public class PlantController {
             }
     )
     @GetMapping
-    public ResponseEntity<List<Plant>> getAllPlants() {
-        return ResponseEntity.ok(plantService.getAllPlants());
+    @PreAuthorize("@securityChecker.isFromSuperCompany(principal.username)")
+    public List<Plant> getAllPlants() {
+        return plantService.getAllPlants();
     }
 
     /**
@@ -83,10 +84,9 @@ public class PlantController {
             }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<Plant> getPlantById(@PathVariable Integer id) {
-        return plantService.getPlantById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @PreAuthorize("@securityChecker.userCompanyEqualsPlantCompany(principal.username, #id)")
+    public Plant getPlantById(@PathVariable Integer id) {
+        return plantService.getPlantById(id);
     }
 
     /**
@@ -106,7 +106,7 @@ public class PlantController {
             }
     )
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("@securityChecker.isSuperUser(principal.username)")
     public String createPlant(@RequestBody PlantRequest plant)  {
         return plantService.createPlant(plant);
     }
@@ -116,7 +116,7 @@ public class PlantController {
      * Endpoint protegido, solo accesible para usuarios con rol de administrador.
      *
      * @param id El ID de la planta a actualizar.
-     * @param plantDetails El objeto {@link Plant} con los datos actualizados.
+     * @param plantDetails El objeto {@link PlantRequest} con los datos actualizados.
      * @return Un {@link ResponseEntity} con la planta actualizada, o 404 Not Found.
      */
     @Operation(
@@ -128,10 +128,9 @@ public class PlantController {
             }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<Plant> updatePlant(@PathVariable Integer id, @RequestBody Plant plantDetails) {
-        return plantService.updatePlant(id, plantDetails)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @PreAuthorize("@securityChecker.isSuperUser(principal.username)")
+    public Plant updatePlant(@PathVariable Integer id, @RequestBody PlantRequest plantDetails) {
+        return plantService.updatePlant(id, plantDetails);
     }
 
     /**
@@ -150,6 +149,7 @@ public class PlantController {
             }
     )
     @DeleteMapping("/{id}")
+    @PreAuthorize("@securityChecker.isSuperUser(principal.username)")
     public ResponseEntity<Void> deletePlant(@PathVariable Integer id) {
         boolean deleted = plantService.deletePlant(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();

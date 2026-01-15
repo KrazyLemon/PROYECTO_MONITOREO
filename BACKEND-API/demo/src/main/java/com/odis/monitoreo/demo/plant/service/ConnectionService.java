@@ -31,6 +31,7 @@ public class ConnectionService {
 
         User usr = securityUtils.getCurrentUser();
         Plant plant  = plantRepository.findById(connectionRequest.getPlantId()).orElseThrow();
+
         String token = KeyGeneratorUtils.generateConnectionToken();
 
         Conection conn = new Conection();
