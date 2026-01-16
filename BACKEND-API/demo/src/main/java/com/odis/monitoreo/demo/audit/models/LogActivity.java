@@ -2,17 +2,16 @@ package com.odis.monitoreo.demo.audit.models;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "logs")
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class LogActivity {
 
     @Id

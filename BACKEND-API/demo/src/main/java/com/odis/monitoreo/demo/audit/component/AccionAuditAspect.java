@@ -1,4 +1,4 @@
-package com.odis.monitoreo.demo.audit.Component;
+package com.odis.monitoreo.demo.audit.component;
 
 import com.odis.monitoreo.demo.audit.models.LogActivity;
 import com.odis.monitoreo.demo.audit.models.TipoAccion;
