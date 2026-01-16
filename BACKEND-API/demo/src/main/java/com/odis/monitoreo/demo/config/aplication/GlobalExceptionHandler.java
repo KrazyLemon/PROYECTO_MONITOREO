@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Maneja excepciones de tipo IllegalArgumentException (400 Bad Request).
-     * Se invoca cuando se pasan argumentos inválidos a un método o endpoint.
+     * Se invoca cuando se pasan argumentos inválidos a un endpoint.
      *
      * @param ex  La excepción capturada.
      * @param web La solicitud web actual.

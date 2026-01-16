@@ -90,6 +90,24 @@ public class PlantController {
     }
 
     /**
+     * Obtiene todas las plantas pertenecientes a una empresa específica.
+     *
+     * @param companyId El ID de la empresa.
+     * @return Una lista de objetos {@link Plant} asociados a la empresa.
+     */
+    @Operation(
+            summary = "Listar plantas por empresa",
+            description = "Obtiene todas las plantas asociadas a un ID de empresa específico.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Lista de plantas obtenida exitosamente")
+            }
+    )
+    @GetMapping("/company/{companyId}")
+    public List<Plant> getAllPlantsByCompanyId(@PathVariable Integer companyId){
+        return plantService.getPlantsByCompanyId(companyId);
+    }
+
+    /**
      * Crea una nueva planta.
      * Endpoint protegido, solo accesible para usuarios con rol de administrador.
      *
@@ -111,6 +129,8 @@ public class PlantController {
         return plantService.createPlant(plant);
     }
 
+
+
     /**
      * Actualiza una planta existente.
      * Endpoint protegido, solo accesible para usuarios con rol de administrador.
@@ -119,6 +139,10 @@ public class PlantController {
      * @param plantDetails El objeto {@link PlantRequest} con los datos actualizados.
      * @return Un {@link ResponseEntity} con la planta actualizada, o 404 Not Found.
      */
+
+
+    // ToDo : Reparar update no funciona es problema del dto mal enviado
+    // ToDo : Reaparar JSON mal enviado. No se mira las conexiones hechas a las plantas
     @Operation(
             summary = "Actualizar planta",
             description = "Modifica los datos de una planta existente. Requiere rol ADMIN.",

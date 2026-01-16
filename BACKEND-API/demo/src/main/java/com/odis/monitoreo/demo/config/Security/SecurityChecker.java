@@ -40,7 +40,7 @@ public class SecurityChecker {
         int plantCompanyId = plantRepository.findById(plantId).get().getCompany().getId();
         int userCompanyId = userRepository.findByEmail(email).get().getCompany().getId();
 
-        return plantCompanyId == userCompanyId;
+        return plantCompanyId == userCompanyId || isFromSuperCompany(email);
 
     }
 }
