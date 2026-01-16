@@ -1,5 +1,6 @@
 package com.odis.monitoreo.demo.company.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import org.hibernate.envers.Audited;
 @Data
 @Audited
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

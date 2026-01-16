@@ -4,10 +4,9 @@ import com.odis.monitoreo.demo.company.models.Company;
 import com.odis.monitoreo.demo.company.models.CompanyResponse;
 import com.odis.monitoreo.demo.company.repository.CompanyRepository;
 import com.odis.monitoreo.demo.config.Security.SecurityUtils;
-import com.odis.monitoreo.demo.user.models.Role;
-import com.odis.monitoreo.demo.user.models.User;
 import com.odis.monitoreo.demo.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ import java.util.Optional;
  * tenga el rol de ADMIN y pertenezca a una "SuperEmpresa" (ODIS).
  */
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
@@ -95,12 +94,12 @@ public class CompanyService {
      * Actualiza la información de una empresa existente.
      *
      * @param newcompany Los nuevos datos de la empresa.
-     * @param id El identificador de la empresa a actualizar.
+     * @param id         El identificador de la empresa a actualizar.
      * @return Un Optional con la empresa actualizada si existía.
      * @throws AccessDeniedException Si el usuario actual no tiene permisos para realizar esta acción.
      */
     @Transactional
-    public Optional<Company> updateCompany(Company newcompany,Integer id)throws AccessDeniedException {
+    public Optional<Company> updateCompany(Company newcompany, Integer id)throws AccessDeniedException {
         return companyRepository.findById(id)
                 .map(company -> {
                     company.setName(newcompany.getName());

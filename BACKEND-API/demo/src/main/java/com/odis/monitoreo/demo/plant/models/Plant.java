@@ -1,5 +1,6 @@
 package com.odis.monitoreo.demo.plant.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.odis.monitoreo.demo.company.models.Company;
 import jakarta.persistence.*;
@@ -17,6 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "plantas")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Plant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +45,7 @@ public class Plant {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Company company;
 
 }

@@ -1,5 +1,6 @@
 package com.odis.monitoreo.demo.plant.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.odis.monitoreo.demo.user.models.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Conection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +24,12 @@ public class Conection {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "conections"})
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "planta_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "conections"})
     private Plant plant;
 
     @Column(name = "token")

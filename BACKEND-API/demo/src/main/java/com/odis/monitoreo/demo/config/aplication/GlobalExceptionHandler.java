@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Maneja excepciones de tipo IllegalArgumentException (400 Bad Request).
-     * Se invoca cuando se pasan argumentos inválidos a un método o endpoint.
+     * Se invoca cuando se pasan argumentos inválidos a un endpoint.
      *
      * @param ex  La excepción capturada.
      * @param web La solicitud web actual.
@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
         ApiError error = new ApiError(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Error interno del servidor",
-                "Ocurrio un error inesperado en el servidor",
+                ex.getMessage(),
                 web.getDescription(false).replace("uri=", "")
         );
         return new ResponseEntity<>(error,HttpStatus.INTERNAL_SERVER_ERROR);
