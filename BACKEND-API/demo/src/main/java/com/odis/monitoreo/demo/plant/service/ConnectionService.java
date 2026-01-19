@@ -70,4 +70,23 @@ public class ConnectionService {
         return "Conexion no encontrada";
     }
 
+    @Transactional
+    public String connect(ConnectionRequest request){
+        User usr = securityUtils.getCurrentUser();
+        Plant plant  = plantRepository.findById(request.getPlantId()).orElseThrow();
+
+        Conection conn = connectionRepository.findByUserIdAndPlantId(usr.getId(), plant.getId()).orElseThrow();
+        conn.setLastConexion(LocalDateTime.now());
+        return plant.getToken();
+    }
+
+    @Transactional
+    public void disconnect(ConnectionRequest request){
+        User usr = securityUtils.getCurrentUser();
+        Plant plant  = plantRepository.findById(request.getPlantId()).orElseThrow();
+        Conection conn = connectionRepository.findByUserIdAndPlantId(usr.getId(), plant.getId()).orElseThrow();
+        conn.setActive(false);
+        connectionRepository.save(conn);
+    }
+
 }

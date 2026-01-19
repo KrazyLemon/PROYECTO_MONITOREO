@@ -10,4 +10,7 @@ import java.util.Optional;
 @Repository
 public interface ConnectionRepository extends JpaRepository<Conection, Integer> {
     Conection findByToken(String token);
+
+    @Query("SELECT C FROM Conection C WHERE C.user.id = :userId AND C.plant.id = :plantId")
+    Optional<Conection> findByUserIdAndPlantId(Integer userId, Integer plantId);
 }

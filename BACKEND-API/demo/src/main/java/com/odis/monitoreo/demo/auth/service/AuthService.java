@@ -4,7 +4,6 @@ import com.odis.monitoreo.demo.auth.models.AuthResponse;
 import com.odis.monitoreo.demo.auth.models.LoginRequest;
 import com.odis.monitoreo.demo.auth.models.RegisterRequest;
 import com.odis.monitoreo.demo.company.repository.CompanyRepository;
-import com.odis.monitoreo.demo.company.service.CompanyService;
 import com.odis.monitoreo.demo.jwt.JwtService;
 import com.odis.monitoreo.demo.user.models.Role;
 import com.odis.monitoreo.demo.user.models.User;
@@ -34,6 +33,7 @@ public class AuthService {
                 .token(token)
                 .build();
     }
+
     public AuthResponse register(RegisterRequest request){
         User user = User.builder()
                 .email(request.getUsername())
@@ -53,8 +53,5 @@ public class AuthService {
                 .build();
     }
 
-//    public AuthResponse plantLogin(PlantRequest request){
-//
-//    }
 
 }

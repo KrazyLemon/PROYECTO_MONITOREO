@@ -7,7 +7,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,12 +26,12 @@ public class Plant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    // NOMBRE DE ACCESO A LA API
     @Column(name = "nombre")
     private String name;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(name = "API_KEY")
-    private String key;
+    @Column(name = "token")
+    private String token;
 
     @Column(name = "ubicacion")
     private String ubication;
@@ -40,7 +42,9 @@ public class Plant {
     @Column(name = "ip_vnc")
     private String ipVnc;
 
-    @OneToMany(mappedBy = "plant", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "plant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<Conection> conections = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

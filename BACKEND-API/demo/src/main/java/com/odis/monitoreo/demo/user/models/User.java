@@ -53,6 +53,8 @@ public class User implements UserDetails {
             cascade = CascadeType.PERSIST,
             fetch = FetchType.LAZY
     )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<Conection> conections = new HashSet<>();
 
     @NotAudited

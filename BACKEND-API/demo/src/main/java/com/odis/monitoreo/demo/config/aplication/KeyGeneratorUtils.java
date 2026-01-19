@@ -14,7 +14,7 @@ public class KeyGeneratorUtils {
     }
 
     public static String generateConnectionToken(){
-        byte[] key = new byte[32];
+        byte[] key = new byte[24];
         secureRandom.nextBytes(key);
         return Encoder.encodeToString(key);
     }
