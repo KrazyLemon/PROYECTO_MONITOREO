@@ -3,18 +3,19 @@ package com.odis.monitoreo.demo.plant.service;
 import com.odis.monitoreo.demo.company.models.Company;
 import com.odis.monitoreo.demo.company.repository.CompanyRepository;
 import com.odis.monitoreo.demo.config.aplication.KeyGeneratorUtils;
-import com.odis.monitoreo.demo.config.Security.SecurityUtils;
+
+import com.odis.monitoreo.demo.plant.models.AccessLevel;
+import com.odis.monitoreo.demo.plant.models.ConnectionRequest;
 import com.odis.monitoreo.demo.plant.models.Plant;
 import com.odis.monitoreo.demo.plant.models.PlantRequest;
 import com.odis.monitoreo.demo.plant.repository.PlantRepository;
-import com.odis.monitoreo.demo.user.models.User;
-import com.odis.monitoreo.demo.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,10 +25,8 @@ public class PlantService {
     // Inyeccion de dependencias
     private final PlantRepository plantRepository;
     private final PasswordEncoder passwordEncoder;
-    private final SecurityUtils securityUtils;
-    private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
-
+    private final ConnectionService connectionService;
 
     // Metodos
     public List<Plant> getAllPlants() {
@@ -44,37 +43,44 @@ public class PlantService {
     }
 
     @Transactional
-    public String createPlant(PlantRequest plant) throws RuntimeException {
+    public Plant createPlant(PlantRequest plant) throws RuntimeException {
+
+        // Creamos la planta
         String rawKey = KeyGeneratorUtils.generateKey();
-        String encodedKey = passwordEncoder.encode(rawKey);
-        Company company = companyRepository.findByName(plant.getCompany());
+        Company company = companyRepository.findByName(plant.getCompany()); // Buscamos la empresa asociada a la planta
 
         Plant newPlant = new Plant();
-
         newPlant.setName(plant.getName());
-        newPlant.setKey(encodedKey);
         newPlant.setCompany(company);
+        newPlant.setToken(rawKey);
         newPlant.setUbication(plant.getUbication());
         newPlant.setVpnIp(plant.getVpnIp());
         newPlant.setIpVnc(plant.getIpVnc());
 
         plantRepository.save(newPlant);
-        return rawKey;
+        // Creamos conexión con el usuario loggeado actualmente
+        ConnectionRequest connectionRequest = new ConnectionRequest(
+                newPlant.getId(),
+                AccessLevel.ADMIN_ACCESS,
+                LocalDateTime.now().plusDays(30)
+        );
+
+        connectionService.createConnection(connectionRequest);
+
+        return newPlant;
     }
 
     @Transactional
     public Plant updatePlant(Integer id, PlantRequest plantDetails) throws RuntimeException {
-        plantRepository.findById(id).orElseThrow(() -> new RuntimeException("Planta no Encontrada"));
-        Company company = company = companyRepository.findByName(plantDetails.getCompany());
 
-        Plant plant = new Plant();
+        Plant plant = plantRepository.findById(id).orElseThrow(() -> new RuntimeException("Planta no Encontrada"));
+        Company company  = companyRepository.findByName(plantDetails.getCompany());
 
         plant.setName(plantDetails.getName());
         plant.setUbication(plantDetails.getUbication());
         plant.setVpnIp(plantDetails.getVpnIp());
         plant.setIpVnc(plantDetails.getIpVnc());
         plant.setCompany(company);
-
 
         return plantRepository.save(plant);
     }
@@ -85,4 +91,5 @@ public class PlantService {
         plantRepository.delete(plant);
         return true;
     }
+
 }

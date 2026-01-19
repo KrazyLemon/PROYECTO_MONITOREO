@@ -74,7 +74,7 @@ public class ConnectionController {
                     @ApiResponse(responseCode = "200", description = "Conexión eliminada exitosamente")
             }
     )
-    @PutMapping("/delete")
+    @DeleteMapping("/delete")
     public String deleteConnection(@RequestParam String token){
         return connectionService.deleteConnection(token);
     }
@@ -97,5 +97,17 @@ public class ConnectionController {
     public String updateConnection(@RequestParam String token, @RequestBody ConnectionRequest connectionRequest){
         return connectionService.updateConnection(token, connectionRequest);
     }
+
+    @PostMapping(value = "conect")
+    public String conect(@RequestBody ConnectionRequest request){
+        return connectionService.connect(request);
+    }
+
+    @PostMapping(value = "disconnect")
+    public void disconnect(@RequestBody ConnectionRequest request){
+        connectionService.disconnect(request);
+    }
+
+
 
 }

@@ -34,22 +34,6 @@ public class PlantController {
     // Inyeccion de dependencias
     private final PlantService plantService;
 
-//    /**
-//     * Endpoint de bienvenida para verificar el acceso.
-//     * @return Un mensaje de bienvenida.
-//     */
-//    @Operation(
-//            summary = "Bienvenida",
-//            description = "Endpoint de prueba para verificar acceso autenticado.",
-//            responses = {
-//                    @ApiResponse(responseCode = "200", description = "Acceso correcto")
-//            }
-//    )
-//    @GetMapping(value = "welcome")
-//    public ResponseEntity<String> welcome(){
-//        return ResponseEntity.ok("Hola desde un endpoint privado");
-//    }
-
     /**
      * Obtiene una lista de todas las plantas a las que el usuario tiene acceso.
      * @PreAuthorize verifica que el usuario actual pertenzca a empresa ODIS para ver todas las plantas.
@@ -125,11 +109,9 @@ public class PlantController {
     )
     @PostMapping
     @PreAuthorize("@securityChecker.isSuperUser(principal.username)")
-    public String createPlant(@RequestBody PlantRequest plant)  {
+    public Plant createPlant(@RequestBody PlantRequest plant)  {
         return plantService.createPlant(plant);
     }
-
-
 
     /**
      * Actualiza una planta existente.
@@ -139,10 +121,8 @@ public class PlantController {
      * @param plantDetails El objeto {@link PlantRequest} con los datos actualizados.
      * @return Un {@link ResponseEntity} con la planta actualizada, o 404 Not Found.
      */
-
-
     // ToDo : Reparar update no funciona es problema del dto mal enviado
-    // ToDo : Reaparar JSON mal enviado. No se mira las conexiones hechas a las plantas
+    // ToDo : Reparar JSON mal enviado. No se mira las conexiones hechas a las plantas
     @Operation(
             summary = "Actualizar planta",
             description = "Modifica los datos de una planta existente. Requiere rol ADMIN.",

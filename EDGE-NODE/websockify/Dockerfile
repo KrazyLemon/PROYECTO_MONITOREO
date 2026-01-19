@@ -8,7 +8,6 @@ RUN apk update && \
     rm -rf /var/cache/apk/*
 
 WORKDIR /app
-# RUN git clone https://github.com/novnc/websockify.git .
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir websockify -r requirements.txt
@@ -27,3 +26,4 @@ EXPOSE 6080
 # CMD ["python3", "./websockify", "--auth-plugin", "auth_api", "--auth-source", "ApiAuth", "6081"]
 
 CMD ["websockify","--token-plugin","TokenFile","--token-source","/app/tokens","6081"]
+

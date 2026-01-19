@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -25,11 +27,15 @@ public class Conection {
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "conections"})
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "planta_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "conections"})
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Plant plant;
 
     @Column(name = "token")
