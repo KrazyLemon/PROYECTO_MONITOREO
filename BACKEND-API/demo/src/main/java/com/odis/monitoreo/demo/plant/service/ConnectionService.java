@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,11 @@ public class ConnectionService {
     @Transactional
     public Conection getConnection(String token){
         return connectionRepository.findByToken(token);
+    }
+
+    @Transactional
+    public List<Conection> getConnections(){
+        return connectionRepository.findAll();
     }
 
     @Transactional

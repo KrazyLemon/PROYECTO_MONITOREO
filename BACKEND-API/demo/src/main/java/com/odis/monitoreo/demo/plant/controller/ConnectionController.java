@@ -8,7 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Controlador REST para la gestión de conexiones a plantas.
@@ -38,10 +41,17 @@ public class ConnectionController {
                     @ApiResponse(responseCode = "404", description = "Conexión no encontrada o token inválido")
             }
     )
-    @GetMapping
+    @GetMapping("/token")
     public Conection getConnectionByToken(@RequestParam String token ){
         return connectionService.getConnection(token);
     }
+
+    @GetMapping
+    @PreAuthorize("@securityChecker.isSuperUser(principal.username)")
+    public List<Conection > getConnections(){
+        return connectionService.getConnections();
+    }
+
 
     /**
      * Crea una nueva conexión.

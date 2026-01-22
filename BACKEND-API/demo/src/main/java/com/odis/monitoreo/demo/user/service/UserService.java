@@ -1,6 +1,7 @@
 package com.odis.monitoreo.demo.user.service;
 
 import com.odis.monitoreo.demo.auth.models.RegisterRequest;
+import com.odis.monitoreo.demo.config.Security.SecurityUtils;
 import com.odis.monitoreo.demo.user.models.User;
 import com.odis.monitoreo.demo.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -8,11 +9,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final SecurityUtils securityUtils;
 
     @Transactional
     public List<User> getAllUsers(){
@@ -23,6 +26,11 @@ public class UserService {
     public User getUserById(Integer id){
         return userRepository.findById(id).orElseThrow();
     }
+
+    public Optional<User> getMe(String email){
+      return userRepository.findByEmail(email);
+    }
+
     @Transactional
     public User registerUser(User user) {
         userRepository.save(user);

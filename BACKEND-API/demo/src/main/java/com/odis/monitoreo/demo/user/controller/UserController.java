@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controlador REST para la gestión de usuarios.
@@ -67,6 +68,14 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    /// Obtiene al usuario actualmente logeado
+    ///
+    /// @return El objeto {@Link User} encontrado.
+    ///
+    @GetMapping("/me/{email}")
+    public Optional<User> getMe(@PathVariable String email){
+        return userService.getMe(email);
+    }
     /**
      * Registra un nuevo usuario en el sistema.
      * Requiere permisos de superusuario.
@@ -108,6 +117,8 @@ public class UserController {
     public User updateUser(@RequestBody User user, @PathVariable Integer id){
         return userService.updateUser(user, id);
     }
+
+
 
     /**
      * Elimina un usuario del sistema.
