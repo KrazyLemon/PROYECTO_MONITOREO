@@ -1,44 +1,43 @@
-
 name: cloud-gateway
 services:
   vpn-server:
     image: linuxserver/wireguard:latest
     env_file:
-      - .env  # Cambiar a .env.prod en Produccion
+      - .env
     container_name: vpn-server
     cap_add:
       - NET_ADMIN
-      - SYS_MODULE # Opcional, pero ayuda si el kernel del host lo soporta
+      - SYS_MODULE
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=America/Mexico_City
-      - SERVERURL=${SERVER_PUBLIC_IP} # O tu dominio (ej. vpn.miempresa.com)
+      - SERVERURL=${SERVER_PUBLIC_IP}
       - SERVERPORT=${SERVER_PORT}
       - PEERS=${PEER_1}# Nombres de tus clientes
       - PEERDNS=auto
-      - INTERNAL_SUBNET=${INTERNAL_SUBNET} # La red privada del túnel
+      - INTERNAL_SUBNET=${INTERNAL_SUBNET}
       - ALLOWEDIPS=${SERVER_ALLOWED_IPS:-0.0.0.0/0}
     volumes:
       - ./config:/config
-      - /lib/modules:/lib/modules # Para usar módulos del kernel si están disponibles
+      - /lib/modules:/lib/modules
     ports:
-      - 51820:51820/udp # IMPORTANTE: Abrir este puerto UDP en el Firewall de AWS
+      - "51820:51820/udp"
+      - "443:443"
+      - "80:80"
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
   nginx-proxy:
     image: nginx:latest
     container_name: nginx-proxy
-    ports:
-      - "80:80"
-      - "443:443"
+    network_mode: "service:vpn-server"
     volumes:
       # Configuraciones Nginx
       - ./nginx/conf.d:/etc/nginx/conf.d
       # Certificados SSL
-      # - ./nginx/cert:/etc/nginx/certs:ro
+      - ./html:/usr/share/nginx/html:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - vpn-server
-    restart: always
-  
+    restart: unless-stopped
