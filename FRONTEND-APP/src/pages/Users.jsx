@@ -29,7 +29,17 @@ export default function User() {
 
   return (
     <>
-      <nav>Controles</nav>
+      <nav className="bg-white flex justify-between p-4 mb-2 shadow-sm border-white/20 rounded-md">
+        <div className="flex gap-2 justify-start">
+          <button className="btn btn-success">Crear</button>
+          <button className="btn btn-error">Borrar</button>
+        </div>
+        <div className="flex gap-2">
+          <input className="input" />
+          <button className="btn btn-secondary">Conexion</button>
+          <button className="btn btn-primary">Cambiar permisos</button>
+        </div>
+      </nav>
       <table className="table overflow-x-auto bg-white shadow-sm border-white/20">
         <thead>
           <tr>
@@ -42,16 +52,18 @@ export default function User() {
           </tr>
         </thead>
         <tbody>
-            {users.map ((user) => (
-                <tr>
-                    <th>{user.id}</th>
-                    <th>{user.firstName} {user.lastName}</th>
-                    <th>{user.email}</th>
-                    <th>{user.company.name}</th>
-                    <th>{user.role}</th>
-                    <th>{user.conexiones?.id || "No hay conexiones"}</th>
-                </tr>
-            ))}
+          {users.map((user) => (
+            <tr>
+              <th>{user.id}</th>
+              <th>
+                {user.firstName} {user.lastName}
+              </th>
+              <th>{user.email}</th>
+              <th>{user.company.name}</th>
+              <th>{user.role}</th>
+              <th>{user.conexiones?.id || "No hay conexiones"}</th>
+            </tr>
+          ))}
         </tbody>
       </table>
     </>
