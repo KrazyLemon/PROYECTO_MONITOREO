@@ -16,8 +16,8 @@ export default function Dashboard() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
       <VncViewer
-        url="wss://monitor.odis.com.mx/websockify/?token=contenedor_dev_v1"
-        viewOnly={false}
+        url="wss://monitor.odis.com.mx/websockify/localhost-dev-pc?token=n4OqKgn98xYRACGOScjRuflwYGS9V2nwlgMRlTh0YWY="
+        viewOnly={true}
         onConnect={() => {
           console.log("Conexion correcta");
         }}
@@ -33,8 +33,8 @@ export default function Dashboard() {
       />
 
       <VncViewer
-        url="wss://monitor.odis.com.mx/websockify/?token=contenedor_dev_v1"
-        viewOnly={true}
+        url="wss://monitor.odis.com.mx/websockify/localhost-dev-pc?token=n4OqKgn98xYRACGOScjRuflwYGS9V2nwlgMRlTh0YWY="
+        viewOnly={false}
         onConnect={() => {
           console.log("Conexion correcta");
         }}

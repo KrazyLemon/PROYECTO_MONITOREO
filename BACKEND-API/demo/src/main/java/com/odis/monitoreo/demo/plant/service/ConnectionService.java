@@ -83,7 +83,9 @@ public class ConnectionService {
 
         Conection conn = connectionRepository.findByUserIdAndPlantId(usr.getId(), plant.getId()).orElseThrow();
         conn.setLastConexion(LocalDateTime.now());
-        return plant.getToken();
+        String ws = "wss://monitor.odis.com.mx/websockify/" + plant.getName() + "?token=" + plant.getToken();
+        connectionRepository.save(conn);
+        return ws;
     }
 
     @Transactional

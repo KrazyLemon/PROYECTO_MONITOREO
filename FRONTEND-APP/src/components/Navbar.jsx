@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
 const pages = [
-  { name: "Inicio", path: "/dashboard",icon: "mdi:home-variant" },
+  { name: "Inicio", path: "/dashboard", icon: "mdi:home-variant" },
+  { name: "Plantas de Tratamiento", path: "/plants", icon: "mdi:factory" },
   { name: "Usuarios", path: "/user", icon: "mdi:users" },
   { name: "Reportes", path: "/reports", icon: "mdi:file-report" },
 ];
@@ -15,16 +16,15 @@ const getActualPage = () => {
   return page ? page.name : "Dashboard";
 };
 
-
 export default function Navbar() {
   //const currentPage = getActualPage();
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuth();
 
-  const handleLogout = (e) =>{
+  const handleLogout = (e) => {
     e.preventDefault();
     logout();
-  }
+  };
 
   return (
     <div className="drawer lg:drawer-open">
@@ -74,7 +74,7 @@ export default function Navbar() {
                 </a>
               </li>
               <li>
-                <button onClick={handleLogout} >Cerrar Sesión</button>
+                <button onClick={handleLogout}>Cerrar Sesión</button>
               </li>
             </ul>
           </div>
@@ -110,7 +110,17 @@ export default function Navbar() {
           <ul className="menu">
             <li>
               <Link
-                to = "/settings"
+                to="/alarms"
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right tooltip-error"
+                data-tip="Alarmas"
+              >
+                <Icon icon="mdi:alarm-light" width={24} height={24} />
+                <span className="is-drawer-close:hidden">Alarmas</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/settings"
                 className="is-drawer-close:tooltip is-drawer-close:tooltip-right tooltip-secondary"
                 data-tip="Ajustes"
               >
@@ -119,7 +129,6 @@ export default function Navbar() {
               </Link>
             </li>
           </ul>
-          
         </div>
       </div>
     </div>

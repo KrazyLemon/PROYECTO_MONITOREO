@@ -9,7 +9,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -22,22 +22,30 @@ export default function Login() {
     }
   };
 
+  const handleEnter = (e) => {
+    if (e.key === "Enter") {
+      console.log("Enter presionado");
+      handleSubmit(e);
+    }
+  };
+
   return (
     <div className="w-full h-screen flex flex-col justify-around items-center">
-      <div className="mx-auto w-3/5 lg:w-1/5">
+      <div className="mx-auto w-3/5 lg:w-1/5 bg-white border-base-200 rounded-box shadow-xl p-4">
         <img src="/logo.png" alt="Logo" className="mb-2 mx-auto" />
         <h1 className="text-cyan-600 font-semibold w-full flex justify-center">
           SISTEMA DE MONITOREO
         </h1>
-        <fieldset className="fieldset bg-white border-base-200 rounded-box shadow-xl w-sx border p-4">
+        <fieldset className="fieldset w-sx mt-2 border p-2 rounded-xl border-base-300">
           <legend className="fieldset-legend">Iniciar Sesión</legend>
           <label htmlFor="username" className="label font-semibold">
-            Nombre de Usuario o Email:
+            Correo electronico:
           </label>
           <input
-            type="text"
+            type="email"
             id="username"
-            className="input w-full"
+            required
+            className="input validator input-bordered w-full"
             onChange={(e) => setUsername(e.target.value)}
           />
           <label htmlFor="password" className="label font-semibold">
@@ -47,8 +55,10 @@ export default function Login() {
             <input
               type={showPassword ? "text" : "password"}
               id="password"
+              required
               className="input input-bordered w-full pr-10"
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleEnter}
             />
             <button
               type="button"
@@ -61,11 +71,16 @@ export default function Login() {
               />
             </button>
           </div>
+          
           <a href="" className="link-hover flex w-full justify-end">
             ¿Olvidaste tu contraseña?
           </a>
           <label className="label">
-            <input type="checkbox" defaultChecked className="checkbox checkbox-sm checkbox-primary" />
+            <input
+              type="checkbox"
+              defaultChecked
+              className="checkbox checkbox-sm checkbox-primary"
+            />
             Recuerdame
           </label>
           <button className="btn btn-primary mt-4" onClick={handleSubmit}>
