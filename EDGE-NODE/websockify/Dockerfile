@@ -25,5 +25,5 @@ EXPOSE 6080
 
 # CMD ["python3", "./websockify", "--auth-plugin", "auth_api", "--auth-source", "ApiAuth", "6081"]
 
-CMD ["websockify","--token-plugin","TokenFile","--token-source","/app/tokens","6081"]
+CMD ["websockify","--token-plugin","TokenFile","--token-source","/app/tokens","6080"]
 

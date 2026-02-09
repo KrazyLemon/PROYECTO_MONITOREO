@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
 
 
   // Función para iniciar sesión y almacenar el token
-  const login = async (username, password) => {
+   const login = async (username, password) => {
     try {
       //console.log("Intentando iniciar sesión con:", {username, password });
       const response = await api.post('/auth/login', {username, password});  
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setToken(null);
     setUsername(null);
-  };
+  }; 
 
   // Función para obtener los datos del usuario requiere primero un TOKEN válido y username
   const fetchUserData = async () => {
@@ -47,6 +47,226 @@ export const AuthProvider = ({ children }) => {
       logout();
     }   
   };
+
+  // Función para registrar un nuevo usuario
+  const register = async (userData) => {
+    try {
+      const response = await api.post('/auth/register', userData);
+      setToken(response.data.token);
+      setUsername(userData.username);
+      localStorage.setItem('token', response.data.token);
+      return response.data;
+    } catch (error) {
+      console.error("Error al registrar usuario:", error);
+      throw error;
+    }
+  };
+
+  // Funciones para Empresas
+  const getCompanies = async () => {
+    try {
+      const response = await api.get('/api/companies', { headers: { Authorization: `Bearer ${token}` } });
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener empresas:", error);
+      throw error;
+    }
+  };
+
+  const getCompanyById = async (id) => {
+    try {
+      const response = await api.get(`/api/companies/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener empresa:", error);
+      throw error;
+    }
+  };
+
+  const createCompany = async (companyData) => {
+    try {
+      const response = await api.post('/api/companies', companyData, { headers: { Authorization: `Bearer ${token}` } });
+      return response.data;
+    } catch (error) {
+      console.error("Error al crear empresa:", error);
+      throw error;
+    }
+  };
+
+  const updateCompany = async (id, companyData) => {
+    try {
+      const response = await api.put(`/api/companies/${id}`, companyData, { headers: { Authorization: `Bearer ${token}` } });
+      return response.data;
+    } catch (error) {
+      console.error("Error al actualizar empresa:", error);
+      throw error;
+    }
+  };
+
+  const deleteCompany = async (id) => {
+    try {
+      const response = await api.delete(`/api/companies/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      return response.data;
+    } catch (error) {
+      console.error("Error al eliminar empresa:", error);
+      throw error;
+    }
+  };
+
+  // Funciones para Plantas
+  const getPlants = async () => {
+    try {
+      const response = await api.get('/api/plants', { headers: { Authorization: `Bearer ${token}` } });
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener plantas:", error);
+      throw error;
+    }
+  };
+
+  const getPlantById = async (id) => {
+    try {
+      const response = await api.get(`/api/plants/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener planta:", error);
+      throw error;
+    }
+  };
+
+  const getPlantsByCompany = async (companyId) => {
+    try {
+      const response = await api.get(`/api/plants/company/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener plantas por empresa:", error);
+      throw error;
+    }
+  };
+
+  const createPlant = async (plantData) => {
+    try {
+      const response = await api.post('/api/plants', plantData, { headers: { Authorization: `Bearer ${token}` } });
+      return response.data;
+    } catch (error) {
+      console.error("Error al crear planta:", error);
+      throw error;
+    }
+  };
+
+  const updatePlant = async (id, plantData) => {
+    try {
+      const response = await api.put(`/api/plants/${id}`, plantData, { headers: { Authorization: `Bearer ${token}` } });
+      return response.data;
+    } catch (error) {
+      console.error("Error al actualizar planta:", error);
+      throw error;
+    }
+  };
+
+  const deletePlant = async (id) => {
+    try {
+      await api.delete(`/api/plants/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+    } catch (error) {
+      console.error("Error al eliminar planta:", error);
+      throw error;
+    }
+  };
+
+  // Funciones para Conexiones
+  const getConnectionByToken = async (tokenParam) => {
+    try {
+      const response = await api.get('/api/connections', { 
+        headers: { Authorization: `Bearer ${token}` },
+        params: { token: tokenParam }
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener conexión:", error);
+      throw error;
+    }
+  };
+
+  const createConnection = async (connectionData) => {
+    try {
+      const response = await api.post('/api/connections', connectionData, { headers: { Authorization: `Bearer ${token}` } });
+      return response.data;
+    } catch (error) {
+      console.error("Error al crear conexión:", error);
+      throw error;
+    }
+  };
+
+  const updateConnection = async (tokenParam, connectionData) => {
+    try {
+      const response = await api.put('/api/connections/update', connectionData, { 
+        headers: { Authorization: `Bearer ${token}` },
+        params: { token: tokenParam }
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error al actualizar conexión:", error);
+      throw error;
+    }
+  };
+
+  const deleteConnection = async (tokenParam) => {
+    try {
+      const response = await api.delete('/api/connections/delete', { 
+        headers: { Authorization: `Bearer ${token}` },
+        params: { token: tokenParam }
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error al eliminar conexión:", error);
+      throw error;
+    }
+  };
+
+  const connect = async (plantId) => {
+    try {
+      const response = await api.post('/api/connections/conect', { plantId }, { headers: { Authorization: `Bearer ${token}` } });
+      return response.data;
+    } catch (error) {
+      console.error("Error al conectar:", error);
+      throw error;
+    }
+  };
+
+  const disconnect = async (plantId) => {
+    try {
+      await api.post('/api/connections/disconnect', { plantId }, { headers: { Authorization: `Bearer ${token}` } });
+    } catch (error) {
+      console.error("Error al desconectar:", error);
+      throw error;
+    }
+  };
+
+  const getAllUsers = async () =>{
+    try{
+      const response =  await api.get("/api/users",{headers : { Authorization: `Bearer ${token}` }})
+      return response;
+    }catch (error) {
+      console.error("Error al obtener usuarios:", error);
+    }
+  };
+
+  const getUserById = async (id) => {
+     try{
+      const response = await api.get("/api/users", { id }, { headers : { Authorization: `Bearer ${token}` }})
+      return response;
+    }catch (error) {
+      console.error("Error al obtener usuario:", error);
+    }
+  };
+
+  // const updateUSer = async (id, usuario) => {
+  //   try {
+  //     await api.put("/api/users", { id }, { headers : { Authorization: `Bearer ${token}` }})
+  //   } catch (error) {
+      
+  //   }
+  // }
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -66,11 +286,31 @@ export const AuthProvider = ({ children }) => {
         user, 
         login, 
         logout, 
+        register,
         fetchUserData, 
+        getCompanies,
+        getCompanyById,
+        createCompany,
+        updateCompany,
+        deleteCompany,
+        getPlants,
+        getPlantById,
+        getPlantsByCompany,
+        createPlant,
+        updatePlant,
+        deletePlant,
+        getConnectionByToken,
+        createConnection,
+        updateConnection,
+        deleteConnection,
+        connect,
+        disconnect,
+        getAllUsers,
+        getUserById,
         isAuthenticated: !!token, 
-        loading }}>
-      {children}
-    </AuthContext.Provider>
+        loading }} >
+          {children}
+    </ AuthContext.Provider>
   );
 };
 

@@ -18,11 +18,11 @@ services:
     restart: unless-stopped
  
   # 3. HMI simulado *******************SOLO DEV TESTING*********************
-  hmi-simulado:
-    container_name: hmi-simulado
-    image: dorowu/ubuntu-desktop-lxde-vnc
-    restart: unless-stopped
-    network_mode: service:vpn-client
+  # hmi-simulado:
+  #   container_name: hmi-simulado
+  #   image: dorowu/ubuntu-desktop-lxde-vnc
+  #   restart: unless-stopped
+  #   network_mode: service:vpn-client
 
   # 2. Websockify
   websockify:
