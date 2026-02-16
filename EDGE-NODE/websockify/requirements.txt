@@ -1,3 +1,0 @@
-# Bibliotecas de terceros necesarias para el plugin de Websockify
-# 'requests' es fundamental para hacer peticiones HTTP/HTTPS a tu Backend API en AWS.
-requests

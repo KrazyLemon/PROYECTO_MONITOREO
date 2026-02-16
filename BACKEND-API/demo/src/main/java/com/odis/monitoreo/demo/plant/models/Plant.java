@@ -30,6 +30,9 @@ public class Plant {
     @Column(name = "nombre")
     private String name;
 
+    @Column(name = "server_url")
+    private String url;
+
     @Column(name = "token")
     private String token;
 

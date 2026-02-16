@@ -52,6 +52,7 @@ public class PlantService {
         Plant newPlant = new Plant();
         newPlant.setName(plant.getName());
         newPlant.setCompany(company);
+        newPlant.setUrl(plant.getUrl());
         newPlant.setToken(rawKey);
         newPlant.setUbication(plant.getUbication());
         newPlant.setVpnIp(plant.getVpnIp());
@@ -77,6 +78,7 @@ public class PlantService {
         Company company  = companyRepository.findByName(plantDetails.getCompany());
 
         plant.setName(plantDetails.getName());
+        plant.setUrl(plantDetails.getUrl());
         plant.setUbication(plantDetails.getUbication());
         plant.setVpnIp(plantDetails.getVpnIp());
         plant.setIpVnc(plantDetails.getIpVnc());
