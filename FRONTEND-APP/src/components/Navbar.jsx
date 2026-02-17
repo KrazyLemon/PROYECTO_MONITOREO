@@ -5,9 +5,9 @@ import { useAuth } from "../context/AuthContext";
 
 const pages = [
   { name: "Inicio", path: "/dashboard", icon: "mdi:home-variant" },
-  { name: "Plantas de Tratamiento", path: "/plants", icon: "mdi:factory" },
-  { name: "Usuarios", path: "/user", icon: "mdi:users" },
+  { name: "Plantas de Tratamiento", path: "/plants", icon: "mdi:pipe-valve" },
   { name: "Reportes", path: "/reports", icon: "mdi:file-report" },
+  { name: "Clientes", path: "/users", icon: "mdi:account-group" },
 ];
 
 const getActualPage = () => {
@@ -108,6 +108,7 @@ export default function Navbar() {
             ))}
           </ul>
           <ul className="menu">
+            
             <li>
               <Link
                 to="/alarms"

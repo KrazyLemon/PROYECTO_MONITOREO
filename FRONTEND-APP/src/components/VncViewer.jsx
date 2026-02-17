@@ -1,99 +1,223 @@
+import { useEffect, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
 import { VncScreen } from "react-vnc";
-import { useState, useRef } from "react";
 import { Icon } from "@iconify/react";
 
-export default function VncViewer({
-  url,
-  viewOnly,
-  onConnect,
-  onDisconnect,
-  onCredentialsRequired,
-  onBell,
-}) {
-  const [connected, setConnected] = useState(false);
-  const [showToolbar, setShowToolbar] = useState(false);
-  const screenRef = useRef(null);
+export default function VncViewer({ url, password, viewOnly, title }) {
+  const vncRef = useRef(null);
+  const intervalRef = useRef(null);
+  const hideTimerRef = useRef(null);
 
-  const handleScreenshot = () => {
-    if (screenRef.current) {
-      const canvas = screenRef.current.querySelector("canvas");
-      if (canvas) {
-        const link = document.createElement("a");
-        link.download = `screenshot-${new Date().toISOString().replace(/[:.]/g, "-")}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-      }
-    }
+  const [connected, setConnected] = useState(false);
+  const [isViewOnly, setIsViewOnly] = useState(viewOnly);
+  const [isLoading, setIsLoading] = useState(true);
+  const [barsVisible, setBarsVisible] = useState(false);
+
+  const connect = () => {
+    vncRef.current?.connect();
   };
 
-  const handleNewScreen = () => {
-    const targetUrl = new URL(window.location.href);
-    targetUrl.searchParams.set("vncUrl", url);
-    window.open(
-      targetUrl.toString(),
-      "_blank",
-      "toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=1024,height=768"
+  const disconnect = () => {
+    vncRef.current?.disconnect();
+  };
+
+  const reconnect = () => {
+    disconnect();
+    setTimeout(connect, 800);
+  };
+
+  const toggleViewOnly = () => {
+    setIsViewOnly((prev) => !prev);
+    reconnect();
+  };
+
+  const openInNewWindow = () => {
+    const newWindow = window.open("", "_blank", "width=1200,height=800");
+
+    if (!newWindow) return;
+
+    newWindow.document.body.style.margin = "0";
+    newWindow.document.title = "VNC Viewer";
+
+    const container = newWindow.document.createElement("div");
+    newWindow.document.body.appendChild(container);
+
+    const root = createRoot(container);
+    root.render(
+      <VncPopup url={url} password={password} viewOnly={isViewOnly} />,
     );
   };
 
+  useEffect(() => {
+    connect();
+    intervalRef.current = setInterval(
+      () => {
+        reconnect();
+      },
+      10 * 60 * 1000,
+    );
+
+    return () => {
+      clearInterval(intervalRef.current);
+      disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    vncRef.current?.connect();
+    return () => vncRef.current?.disconnect();
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="bg-white/0 rounded-md shadow-sm overflow-hidden relative w-full h-95">
-      {!connected && (
-        <div className="absolute inset-0 skeleton rounded-md z-10" />
-      )}
-      <div
-        ref={screenRef}
-        className={`w-full h-full relative transition-opacity duration-300 z-10 ${connected ? "opacity-100" : "opacity-0"}`}
+    <div className="relative overflow-hidden rounded-xl shadow-xl ">
+      {/* BOTÓN FLOTANTE SIEMPRE VISIBLE */}
+      <button
+        onClick={() => setBarsVisible((v) => !v)}
+        className={`absolute left-1/2 -translate-x-1/2 
+                  transition-all duration-200
+                  ${barsVisible ? "top-10" : "top-0"}
+                  z-60
+                  bg-black/40 text-white px-1 py-1 
+                  rounded-b backdrop-blur`}
       >
+        <Icon
+          icon={barsVisible ? "mdi:chevron-up" : "mdi:chevron-down"}
+          width={24}
+        />
+      </button>
+
+      {/* VNC BASE (FONDO) */}
+      <div className="relative z-0">
         <VncScreen
+          ref={vncRef}
+          showDotCursor
           url={url}
+          credentials={{ password }}
           scaleViewport
-          style={{
-            width: "100%",
-            height: "100%",
+          background="#000"
+          viewOnly={isViewOnly}
+          className="w-full h-107"
+          onConnect={() => {
+            setConnected(true);
+            setIsLoading(false);
           }}
-          viewOnly={viewOnly}
-          backgroundColor="#fff"
-          onConnect={() => setConnected(true)}
-          onDisconnect={() => setConnected(false)}
-          onCredentialsRequired={onCredentialsRequired}
-          onBell={onBell}
+          onDisconnect={() => {
+            setConnected(false);
+            setIsLoading(true);
+          }}
         />
       </div>
-      {/* Tool bar for the VNCScreen */}
-      {viewOnly ? (
-        <div className="absolute top-0 left-0 z-20 rounded-md p-2 flex flex-col items-center justify-center text-white/0 hover:bg-black/40 hover:text-white  w-full h-full">
-            <Icon icon="mdi:lock-outline" width={50} height={50} />
-            <h1> No tiene permisos para operar este dispositivo</h1>
-        </div>
-      ) : (
-        <div
-          className={`absolute top-0 left-0 z-20 w-full transition-transform duration-300 ${showToolbar ? "translate-y-0" : "-translate-y-full"}`}
-        >
-          <div className="bg-black/60 backdrop-blur-sm p-2 w-full flex justify-end items-center text-white gap-1 relative shadow-md">
-            <div>
-              <button onClick={handleScreenshot} className="hover:bg-black/80 rounded-full p-1" title="Captura de pantalla">
-                <Icon icon="mdi:camera" width={20} height={20} />
-              </button>
-              <button className="hover:bg-black/80 rounded-full p-1" onClick={handleNewScreen}>
-                <Icon icon="mdi:open-in-new" width={20} height={20} />
-              </button>
-            </div>
 
-            {/* Pestaña para desplegar/ocultar */}
-            <button
-              onClick={() => setShowToolbar(!showToolbar)}
-              className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-sm text-white rounded-b-md px-6 h-6 flex items-center justify-center hover:bg-black/80 transition-colors shadow-sm"
-            >
-              <Icon
-                icon={showToolbar ? "mdi:chevron-up" : "mdi:chevron-down"}
-                width={20}
-                height={20}
-              />
-            </button>
-          </div>
+      {/* BARRA SUPERIOR */}
+      <div
+        className={`absolute top-0 left-0 w-full
+                  bg-black/40 text-white 
+                  flex justify-between items-center px-2 py-1
+                  transition-transform duration-200
+                  z-50
+                  ${barsVisible ? "translate-y-0" : "-translate-y-full"}`}
+      >
+        <h1>{title}</h1>
+        <div className="flex gap-1">
+          <button onClick={reconnect} className="hover:bg-white/20 p-1 rounded">
+            <Icon icon="mdi:refresh" width={24} />
+          </button>
+          <button
+            onClick={openInNewWindow}
+            className="hover:bg-white/20 p-1 rounded"
+          >
+            <Icon icon="mdi:arrow-expand-all" width={24} />
+          </button>
+          <button
+            onClick={disconnect}
+            className="hover:bg-white/20 p-1 rounded"
+          >
+            <Icon icon="mdi:close" width={24} />
+          </button>
+        </div>
+      </div>
+
+      {/* LOADER SOBRE TODO */}
+      {isLoading && (
+        <div className="absolute inset-0 bg-black/30 flex items-center justify-center text-white z-55">
+          Conectando...
         </div>
       )}
+
+      {/* BARRA INFERIOR */}
+      <div
+        className={`absolute bottom-0 left-0 w-full
+                  bg-black/50 text-white 
+                  flex justify-between items-center px-4 py-2
+                  transition-transform duration-200
+                  z-50
+                  ${barsVisible ? "translate-y-0" : "translate-y-full"}`}
+      >
+        <span className="flex items-center gap-2">
+          <span
+            className={`w-2.5 h-2.5 rounded-full ${
+              connected ? "bg-red-600 animate-pulse duration-500" : "bg-red-500/10"
+            }`}
+          />
+          {connected ? "En Vivo" : "Desconectado"}
+        </span>
+
+        <div className="flex gap-2">
+          <button
+            onClick={toggleViewOnly}
+            className="hover:bg-white/20 p-1 rounded"
+          >
+            {isViewOnly ? (
+              <span className="flex gap-1 ">
+                <Icon icon="mdi:eye-lock-outline" width={24} />
+                <h6>Desbloquear escritura</h6>
+              </span>
+            ) : (
+              <span className="flex gap-1">
+                <Icon icon="mdi:eye-outline" width={24} />
+                <h6>Bloquear escritura</h6>
+              </span>
+            )}
+          </button>
+        </div>
+      </div>
     </div>
+  );
+}
+
+function VncPopup({ url, password, viewOnly }) {
+  const vncRef = useRef(null);
+
+  useEffect(() => {
+    vncRef.current?.connect();
+    return () => vncRef.current?.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const el = document.documentElement;
+    if (el.requestFullscreen) {
+      el.requestFullscreen();
+    }
+  }, []);
+
+  return (
+    <VncScreen
+      ref={vncRef}
+      showDotCursor
+      url={url}
+      credentials={{ password }}
+      scaleViewport
+      background="#000"
+      viewOnly={viewOnly}
+      className="w-screen h-screen"
+    />
   );
 }

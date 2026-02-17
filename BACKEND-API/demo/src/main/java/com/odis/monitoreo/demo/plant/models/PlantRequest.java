@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PlantRequest {
     private String name;
+    private String url;
     private String ubication;
     private String vpnIp;
     private String ipVnc;
