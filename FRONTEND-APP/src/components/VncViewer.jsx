@@ -4,7 +4,6 @@ import { VncScreen } from "react-vnc";
 import { Icon } from "@iconify/react";
 
 export default function VncViewer({ url, password, viewOnly, title }) {
-
   const vncRef = useRef(null);
   const intervalRef = useRef(null);
   const hideTimerRef = useRef(null);
@@ -85,9 +84,9 @@ export default function VncViewer({ url, password, viewOnly, title }) {
         className={`absolute left-1/2 -translate-x-1/2 
                   transition-all duration-200
                   ${barsVisible ? "top-10" : "top-0"}
-                  z-[60]
-                  bg-black/30 text-white px-2 py-1 
-                  rounded-b-2xl backdrop-blur`}
+                  z-60
+                  bg-black/40 text-white px-1 py-1 
+                  rounded-b backdrop-blur`}
       >
         <Icon
           icon={barsVisible ? "mdi:chevron-up" : "mdi:chevron-down"}
@@ -120,7 +119,7 @@ export default function VncViewer({ url, password, viewOnly, title }) {
       {/* BARRA SUPERIOR */}
       <div
         className={`absolute top-0 left-0 w-full
-                  bg-black/30 text-white 
+                  bg-black/40 text-white 
                   flex justify-between items-center px-2 py-1
                   transition-transform duration-200
                   z-50
@@ -128,13 +127,19 @@ export default function VncViewer({ url, password, viewOnly, title }) {
       >
         <h1>{title}</h1>
         <div className="flex gap-1">
-          <button onClick={reconnect} className="hover:bg-white/20 p-1">
+          <button onClick={reconnect} className="hover:bg-white/20 p-1 rounded">
             <Icon icon="mdi:refresh" width={24} />
           </button>
-          <button onClick={openInNewWindow} className="hover:bg-white/20 p-1">
+          <button
+            onClick={openInNewWindow}
+            className="hover:bg-white/20 p-1 rounded"
+          >
             <Icon icon="mdi:arrow-expand-all" width={24} />
           </button>
-          <button onClick={disconnect} className="hover:bg-white/20 p-1">
+          <button
+            onClick={disconnect}
+            className="hover:bg-white/20 p-1 rounded"
+          >
             <Icon icon="mdi:close" width={24} />
           </button>
         </div>
@@ -142,7 +147,7 @@ export default function VncViewer({ url, password, viewOnly, title }) {
 
       {/* LOADER SOBRE TODO */}
       {isLoading && (
-        <div className="absolute inset-0 bg-black/30 flex items-center justify-center text-white z-[55]">
+        <div className="absolute inset-0 bg-black/30 flex items-center justify-center text-white z-55">
           Conectando...
         </div>
       )}
@@ -156,11 +161,22 @@ export default function VncViewer({ url, password, viewOnly, title }) {
                   z-50
                   ${barsVisible ? "translate-y-0" : "translate-y-full"}`}
       >
-        <span>{connected ? "En Vivo" : "Desconectado"}</span>
+        <span className="flex items-center gap-2">
+          <span
+            className={`w-2.5 h-2.5 rounded-full ${
+              connected ? "bg-red-600 animate-pulse duration-500" : "bg-red-500/10"
+            }`}
+          />
+          {connected ? "En Vivo" : "Desconectado"}
+        </span>
+
         <div className="flex gap-2">
-          <button onClick={toggleViewOnly} className="hover:bg-white/20 p-1">
+          <button
+            onClick={toggleViewOnly}
+            className="hover:bg-white/20 p-1 rounded"
+          >
             {isViewOnly ? (
-              <span className="flex gap-1">
+              <span className="flex gap-1 ">
                 <Icon icon="mdi:eye-lock-outline" width={24} />
                 <h6>Desbloquear escritura</h6>
               </span>
