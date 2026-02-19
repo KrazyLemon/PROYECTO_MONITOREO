@@ -7,7 +7,7 @@ const pages = [
   { name: "Inicio", path: "/dashboard", icon: "mdi:home-variant" },
   { name: "Plantas de Tratamiento", path: "/plants", icon: "mdi:pipe-valve" },
   { name: "Reportes", path: "/reports", icon: "mdi:file-report" },
-  { name: "Clientes", path: "/users", icon: "mdi:account-group" },
+  { name: "Usuarios", path: "/users", icon: "mdi:account-group" },
 ];
 
 const getActualPage = () => {
@@ -66,7 +66,7 @@ export default function Navbar() {
             </div>
             <ul
               tabIndex="-1"
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow absolute right-0 top-full"
+              className="menu menu-sm dropdown-content bg-white border border-base-300 rounded-box z-70 mt-3 w-52 p-2 shadow-lg absolute right-0 top-full"
             >
               <li>
                 <a href="#" className="justify-between">

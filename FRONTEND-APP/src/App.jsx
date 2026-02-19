@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import Users from "./pages/Users";
+import Plants from "./pages/Plants";
 
 
 export default function App() {
@@ -18,7 +19,12 @@ export default function App() {
             {/* Rutas protegidas */}
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/user" element={<Users />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/plants" element = {<Plants />} />
+              <Route path="/reports" element={<div> A1 </div>} />
+              <Route path="/alarms" element={<div>A1</div>} />
+              <Route path="/settings" element={<div>A1</div>} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>
