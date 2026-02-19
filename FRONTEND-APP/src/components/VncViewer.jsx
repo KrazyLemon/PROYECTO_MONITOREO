@@ -104,7 +104,7 @@ export default function VncViewer({ url, password, viewOnly, title }) {
           scaleViewport
           background="#000"
           viewOnly={isViewOnly}
-          className="w-full h-107"
+          className="w-full h-100"
           onConnect={() => {
             setConnected(true);
             setIsLoading(false);

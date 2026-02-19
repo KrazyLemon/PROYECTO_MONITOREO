@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 const api = axios.create ({
-    baseURL: 'http://localhost:8080'
+    baseURL: 'https://monitor.odis.com.mx/spring'
 })
 
 api.interceptors.response.use(
   (response) => response, // Si la respuesta es OK, déjala pasar
   (error) => {
     // Si el servidor responde 401 (No autorizado) o 403 (Token inválido/vencido)
-    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+    if (error.response && (error.response.status === 401)) {
       console.warn("Sesión expirada o inválida. Cerrando sesión...");
       
       // Limpiamos todo
@@ -16,6 +16,10 @@ api.interceptors.response.use(
       
       // Forzamos la redirección al login
       window.location.href = '/login'; 
+    }
+
+    if(error.response.status === 403){
+      console.warn("Acceso denegado.");
     }
     return Promise.reject(error);
   }

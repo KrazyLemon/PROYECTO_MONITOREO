@@ -14,17 +14,17 @@ export default function User() {
       //console.log(response.data);
       setUsers(response.data);
     } catch (error) {
-      console.error(error.data);
+      //console.error(error.data);
     }
   };
 
   useEffect(() => {
     try {
       getUsers();
-      console.log(users);
+      //console.log(users);
       setLoading(false);
     } catch (error) {
-      console.error(error);
+      //console.error(error);
     }
   }, []);
 

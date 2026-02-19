@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
       //console.log("Intentando iniciar sesión con:", {username, password });
       const response = await api.post('/auth/login', {username, password});  
       setToken(response.data.token);
+      console.log("usuario almacendo" + username);
       setUsername(username);
       //console.log("Token almacenado en el contexto:", response.data.token);
       localStorage.setItem('token', response.data.token);
@@ -38,7 +39,7 @@ export const AuthProvider = ({ children }) => {
   const fetchUserData = async () => {
     try {
       //console.log("Obteniendo datos del usuario para:", username);
-      const response = await api.get(`api/users/me/${username}`, { headers: { Authorization: `Bearer ${token}`}});
+      const response = await api.get(`/api/users/me/${username}`, { headers: { Authorization: `Bearer ${token}`}});
       setUser(response.data);
       //console.log("Datos del usuario obtenidos:", response.data);
     } catch (error) {
