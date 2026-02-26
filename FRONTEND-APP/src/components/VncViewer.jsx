@@ -155,8 +155,7 @@ export default function VncViewer({ url, password, viewOnly, title }) {
       {/* BARRA INFERIOR */}
       <div
         className={`absolute bottom-0 left-0 w-full
-                  bg-black/50 text-white 
-                  flex justify-between items-center px-4 py-2
+                  bg-black/50 text-white flex justify-between items-center px-4 py-2
                   transition-transform duration-200
                   z-50
                   ${barsVisible ? "translate-y-0" : "translate-y-full"}`}
