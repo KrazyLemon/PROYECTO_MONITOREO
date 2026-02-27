@@ -16,7 +16,12 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="w-full flex justify-end items-center p-2 bg-white mb-2">
+      <div className="w-full flex justify-between items-center p-2 bg-white mb-2">
+        <div className="flex gap-1">
+          <button className="btn btn-primary">
+            <span>Crear conexion</span>
+          </button>
+        </div>
         <div className="flex gap-1">
           <div className="input">
             <input type="text" className="" />

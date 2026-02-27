@@ -16,5 +16,4 @@ public class PlantRequest {
     private String vpnIp;
     private String ipVnc;
     private String company;
-
 }

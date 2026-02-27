@@ -1,6 +1,7 @@
 import { useAuth } from "../context/AuthContext";
 import { Icon } from "@iconify/react";
 import { useState, useEffect } from "react";
+import PlantForm from "../components/Forms/plantForm";
 
 export default function Plants() {
   const [plants, setPlants] = useState();
@@ -48,11 +49,7 @@ export default function Plants() {
     console.log("Update plant", id);
   };
 
-  const handleCreate = async () => {
-    // TODO: Implement create logic/modal
-    console.log("Create plant");
-  };
-
+ 
   useEffect(() => {
     getAllPlants();
   }, []);
@@ -64,7 +61,7 @@ export default function Plants() {
           <button
             className="btn tooltip tooltip-top"
             data-tip="Agregar Planta"
-            onClick={handleCreate}
+            onClick={() => {document.getElementById("modal_crear_plant").showModal()}}
           >
             <Icon icon="mdi:plus" width="24" height="24" />
           </button>
@@ -79,8 +76,10 @@ export default function Plants() {
             />
           </div>
         </div>
+        <dialog className="modal" id="modal_crear_plant" >
+          <PlantForm className="modal-box" handleCancel = {() => document.getElementById("modal_crear_plant").close()} />
+        </dialog>
       </nav>
-
       {loading ? (
         <div className="flex justify-center p-10">
           <span className="loading loading-spinner loading-lg"></span>
