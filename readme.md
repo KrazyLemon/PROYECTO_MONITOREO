@@ -439,19 +439,5 @@ docker-compose logs vpn-server   # Ver logs del contenedor
 - **Connections**: Conexiones activas con tokens
 - **LogActivity**: Auditoría de acciones
 
-## 🌐 URLs de Referencia
-
-- **Frontend**: `http://localhost:5173` (desarrollo) o dominio configurado
-- **Backend**: `http://localhost:8080/spring`
-- **VPN**: `51820/udp`
-
-## 📞 Soporte
-
-Para reportar problemas o sugerencias:
-1. Revisar los logs de cada componente
-2. Verificar el troubleshooting arriba
-3. Contactar al equipo de desarrollo
-
----
 
 **Estado del Proyecto**: ✅ En desarrollo activo | Última actualización: Marzo 2026
